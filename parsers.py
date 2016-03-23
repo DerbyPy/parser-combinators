@@ -65,7 +65,7 @@ def char_satisfies(pred, name):
 
     :param pred: is a "predicate" function which looks at a single character and returns True
                  if it should be considered valid or false otherwise.
-    :param name: is the some "name" to give to this kind of character.
+    :param name: is some "name" to give to this kind of character.
     """
     def parser(state):
         if len(state.remaining) > 0 and pred(state.remaining[0]):
@@ -107,7 +107,7 @@ def one_of(chars):
 
 
 def none_of(chars):
-    """Returns a parser that accpets any character except the ones given. It's like "[^abc]" in
+    """Returns a parser that accepts any character except the ones given. It's like "[^abc]" in
     regex.
 
     This is the opposie of the `one_of` parser.
@@ -195,6 +195,10 @@ def text(parser):
     return coerce(''.join, parser)
 
 
+def as_int(parser):
+    return coerce(compose([int, ''.join]), parser)
+
+
 def as_tuple(parser):
     """Coerces parser result to a tuple."""
     return coerce(tuple, parser)
@@ -222,8 +226,8 @@ digit = char_satisfies(str.isdigit, 'digit')
 # A parser that accepts some number of letters and then turns them into a string.
 word = text(many1(letter))
 
-# A parser that accepts an integer and then turns it into a string.
-integer = sequence([choose([char('-'), char('+'), identity]), many1(digit)])
+# A parser that accepts an integer and then turns it into an int.
+integer = as_int(sequence([choose([char('-'), char('+'), identity]), many1(digit)]))
 
 # A parser that accepts a whitespace character.
 whitespace = char_satisfies(str.isspace, 'whitespace')
